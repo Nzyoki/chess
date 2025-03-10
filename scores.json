@@ -1,0 +1,92 @@
+[
+    {
+        "game_id": 0,
+        "date": "2025-03-11 00:11:39",
+        "winner": "white",
+        "white_score": 1,
+        "black_score": 0,
+        "moves": [
+            {
+                "move": [
+                    5,
+                    7,
+                    3,
+                    6
+                ],
+                "piece_captured": "Pawn",
+                "turn": "white"
+            }
+        ],
+        "total_moves": 1
+    },
+    {
+        "game_id": 1,
+        "date": "2025-03-11 00:15:18",
+        "winner": "white",
+        "white_score": 10,
+        "black_score": 0,
+        "moves": [
+            {
+                "move": [
+                    2,
+                    3,
+                    1,
+                    2
+                ],
+                "piece_captured": "Pawn",
+                "turn": "white"
+            },
+            {
+                "move": [
+                    1,
+                    2,
+                    0,
+                    3
+                ],
+                "piece_captured": "Queen",
+                "turn": "white"
+            }
+        ],
+        "total_moves": 2
+    },
+    {
+        "game_id": 2,
+        "date": "2025-03-11 00:15:52",
+        "winner": "white",
+        "white_score": 9,
+        "black_score": 0,
+        "moves": [
+            {
+                "move": [
+                    4,
+                    2,
+                    7,
+                    1
+                ],
+                "piece_captured": "Knight",
+                "turn": "white"
+            },
+            {
+                "move": [
+                    2,
+                    1,
+                    0,
+                    0
+                ],
+                "piece_captured": "Rook",
+                "turn": "white"
+            },
+            {
+                "move": [
+                    0,
+                    0,
+                    1,
+                    2
+                ],
+                "piece_captured": "Pawn",
+                "turn": "white"
+            }
+        ],
+        "total_moves": 3
+    }
+]
