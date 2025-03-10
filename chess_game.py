@@ -311,7 +311,28 @@ class ChessGame:
             screen.blit(highlight, (col * SQUARE_SIZE+2, row * SQUARE_SIZE+2))
 
     def cpu_move(self):
-        # Simple CPU opponent that makes random valid moves
+        """
+        Basic CPU opponent that:
+        1. Looks for any piece that can capture
+        2. If no capture available, makes a random valid move
+        This is a simple demonstration of basic game AI concepts
+        """
+        # First priority: Try to capture a piece
+        for start_x in range(8):
+            for start_y in range(8):
+                piece = self.board.get_piece(start_x, start_y)
+                if piece and piece.color == 'black':
+                    # Look for possible captures
+                    for end_x in range(8):
+                        for end_y in range(8):
+                            target = self.board.get_piece(end_x, end_y)
+                            if target and target.color == 'white':
+                                if piece.is_valid_move(self.board, start_x, start_y, end_x, end_y):
+                                    # Make the capture move
+                                    self.move_piece(start_x, start_y, end_x, end_y)
+                                    return
+
+        # Second priority: Make any valid move
         valid_moves = []
         for start_x in range(8):
             for start_y in range(8):
@@ -322,6 +343,7 @@ class ChessGame:
                             if piece.is_valid_move(self.board, start_x, start_y, end_x, end_y):
                                 valid_moves.append((start_x, start_y, end_x, end_y))
         
+        # Make a random move if any valid moves exist
         if valid_moves:
             start_x, start_y, end_x, end_y = random.choice(valid_moves)
             self.move_piece(start_x, start_y, end_x, end_y)

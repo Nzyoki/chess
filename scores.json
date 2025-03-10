@@ -88,5 +88,85 @@
             }
         ],
         "total_moves": 3
+    },
+    {
+        "game_id": 3,
+        "date": "2025-03-11 00:19:33",
+        "winner": "white",
+        "white_score": 12,
+        "black_score": 7,
+        "moves": [
+            {
+                "move": [
+                    4,
+                    4,
+                    3,
+                    3
+                ],
+                "piece_captured": "Pawn",
+                "turn": "white"
+            },
+            {
+                "move": [
+                    0,
+                    3,
+                    3,
+                    3
+                ],
+                "piece_captured": "Pawn",
+                "turn": "black"
+            },
+            {
+                "move": [
+                    3,
+                    3,
+                    6,
+                    0
+                ],
+                "piece_captured": "Pawn",
+                "turn": "black"
+            },
+            {
+                "move": [
+                    7,
+                    0,
+                    6,
+                    0
+                ],
+                "piece_captured": "Queen",
+                "turn": "white"
+            },
+            {
+                "move": [
+                    4,
+                    2,
+                    3,
+                    2
+                ],
+                "piece_captured": "Pawn",
+                "turn": "white"
+            },
+            {
+                "move": [
+                    3,
+                    2,
+                    3,
+                    5
+                ],
+                "piece_captured": "Pawn",
+                "turn": "white"
+            },
+            {
+                "move": [
+                    0,
+                    2,
+                    3,
+                    5
+                ],
+                "piece_captured": "Rook",
+                "turn": "black"
+            }
+        ],
+        "total_moves": 7
     }
 ]
