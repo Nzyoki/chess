@@ -13,25 +13,25 @@ pygame.init()
 WINDOW_SIZE = 800
 SQUARE_SIZE = WINDOW_SIZE // 8
 
-# Enhanced Color Scheme
+# Enhanced Color Scheme for the chess board
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-DARK_WOOD = (120, 81, 45)    # Dark squares
-LIGHT_WOOD = (205, 170, 125) # Light squares
+DARK_WOOD = (120, 81, 45)    
+LIGHT_WOOD = (205, 170, 125) 
 GOLD = (255, 215, 0)
 HIGHLIGHT = (255, 255, 0, 128)
-SCOREBOARD_BG = (245, 245, 245)  # Light gray background
-DARK_BLUE = (25, 25, 112)    # Dark blue for titles
-FOREST_GREEN = (34, 139, 34)  # Winner green
-CRIMSON = (220, 20, 60)      # Loser red
-MOVE_HIGHLIGHT = (124, 252, 0, 128)  # Light green for possible moves
+SCOREBOARD_BG = (245, 245, 245)  
+DARK_BLUE = (25, 25, 112)    
+FOREST_GREEN = (34, 139, 34)
+CRIMSON = (220, 20, 60)      
+MOVE_HIGHLIGHT = (124, 252, 0, 128)  
 
 # Set up the display
-screen = pygame.display.set_mode((WINDOW_SIZE + 250, WINDOW_SIZE))  # Wider scoreboard
+screen = pygame.display.set_mode((WINDOW_SIZE + 250, WINDOW_SIZE))
 pygame.display.set_caption('Chess Game')
 
 def create_gradient_surface(width, height, start_color, end_color):
-    """Create a vertical gradient surface"""
+   
     surface = pygame.Surface((width, height))
     for y in range(height):
         ratio = y / height
@@ -56,16 +56,16 @@ class ChessGame:
         self.board_border = 10  # Border width for the chess board
         self.gradient_bg = create_gradient_surface(250, WINDOW_SIZE, 
                                                  (245, 245, 245), (220, 220, 220))
-
+#method to get the next game id
     def get_next_game_id(self):
-        """Get next available game ID (Create operation)"""
+       
         try:
             with open('scores.json', 'r') as f:
                 scores = json.load(f)
                 return max([score['game_id'] for score in scores], default=-1) + 1
         except FileNotFoundError:
             return 0
-
+# method to load the pieces from the assets folder
     def load_pieces(self):
         piece_types = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king']
         colors = ['white', 'black']
@@ -75,32 +75,33 @@ class ChessGame:
                 try:
                     img_path = os.path.join('assets', f'{color}-{piece}.png')
                     img = pygame.image.load(img_path)
-                    # Scale the image to fit the square
+                    
                     self.piece_images[f'{color}_{piece}'] = pygame.transform.scale(
                         img, (SQUARE_SIZE, SQUARE_SIZE))
                 except Exception as e:
                     print(f"Error loading {color}-{piece}.png: {e}")
-                    # Create a fallback colored circle if image loading fails
+                    
                     surf = pygame.Surface((SQUARE_SIZE, SQUARE_SIZE), pygame.SRCALPHA)
                     pygame.draw.circle(surf, (*((255, 255, 255) if color == 'white' else (0, 0, 0)), 128),
                                     (SQUARE_SIZE//2, SQUARE_SIZE//2), SQUARE_SIZE//3)
                     self.piece_images[f'{color}_{piece}'] = surf
 
+#method to load the scores from the scores.json file
     def load_scores(self):
-        """Load historical scores from scores.json (Read operation)"""
+       
         try:
             with open('scores.json', 'r') as f:
                 return json.load(f)
         except FileNotFoundError:
             return []
-
+#method to save the scores to the scores.json file
     def save_scores(self):
-        """Save scores to scores.json (Create/Update operation)"""
+        
         with open('scores.json', 'w') as f:
             json.dump(self.scores, f, indent=4)
-
+#method to add a new game result to the scores.json file
     def add_game_result(self, winner, moves):
-        """Create new game record (Create operation)"""
+       
         game_record = {
             'game_id': self.game_id,
             'date': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -113,9 +114,8 @@ class ChessGame:
         self.scores.append(game_record)
         self.save_scores()
         print(f"Game {self.game_id} saved!")
-
+#method to delete a specific game record from the scores.json file
     def delete_game_record(self, game_id):
-        """Delete a specific game record (Delete operation)"""
         initial_length = len(self.scores)
         self.scores = [score for score in self.scores if score['game_id'] != game_id]
         if len(self.scores) < initial_length:
@@ -123,9 +123,9 @@ class ChessGame:
             print(f"Game {game_id} deleted!")
         else:
             print(f"Game {game_id} not found!")
-
+#method to update a specific game record in the scores.json file
     def update_game_record(self, game_id, winner=None):
-        """Update a specific game record (Update operation)"""
+      
         for score in self.scores:
             if score['game_id'] == game_id:
                 if winner:
@@ -139,9 +139,9 @@ class ChessGame:
                 return True
         print(f"Game {game_id} not found!")
         return False
-
+#method to calculate the piece value for scoring
     def calculate_piece_value(self, piece):
-        """Calculate piece value for scoring"""
+       
         values = {
             'Pawn': 1,
             'Knight': 3,
@@ -151,9 +151,9 @@ class ChessGame:
             'King': 0  # King's capture ends the game
         }
         return values.get(piece.__class__.__name__, 0)
-
+#method to move the piece on the board
     def move_piece(self, start_x, start_y, end_x, end_y):
-        """Enhanced move piece with score tracking"""
+       
         target_piece = self.board.get_piece(end_x, end_y)
         if target_piece:  # If capturing a piece
             self.current_score[self.board.current_turn] += self.calculate_piece_value(target_piece)
@@ -166,9 +166,8 @@ class ChessGame:
         
         # Perform the actual move
         return self.board.move_piece(start_x, start_y, end_x, end_y)
-
+#method to save the game state to the game_state.json file
     def save_game_state(self):
-        """Enhanced save game state (Create/Update operation)"""
         game_state = {
             'board': [[str(piece.__class__.__name__) + "_" + piece.color if piece else None 
                       for piece in row] for row in self.board.board],
@@ -181,7 +180,7 @@ class ChessGame:
             json.dump(game_state, f)
 
     def load_game_state(self):
-        """Enhanced load game state (Read operation)"""
+    
         try:
             with open('game_state.json', 'r') as f:
                 game_state = json.load(f)
@@ -200,7 +199,7 @@ class ChessGame:
             self.board.setup_pieces()
 
     def delete_game_state(self):
-        """Enhanced delete game state (Delete operation)"""
+       
         if os.path.exists('game_state.json'):
             os.remove('game_state.json')
         self.game_id += 1
@@ -212,14 +211,14 @@ class ChessGame:
         self.game_history = []
 
     def draw_fancy_rect(self, surface, color, rect, border_radius=15):
-        """Draw a rectangle with rounded corners"""
+        
         pygame.draw.rect(surface, color, rect, border_radius=border_radius)
 
     def draw_scoreboard(self):
-        # Draw gradient background for scoreboard
+     
         screen.blit(self.gradient_bg, (WINDOW_SIZE, 0))
         
-        # Draw decorative border between board and scoreboard
+        
         pygame.draw.rect(screen, DARK_BLUE, (WINDOW_SIZE-2, 0, 4, WINDOW_SIZE))
         
         # Title section with fancy background
@@ -311,13 +310,8 @@ class ChessGame:
             screen.blit(highlight, (col * SQUARE_SIZE+2, row * SQUARE_SIZE+2))
 
     def cpu_move(self):
-        """
-        Basic CPU opponent that:
-        1. Looks for any piece that can capture
-        2. If no capture available, makes a random valid move
-        This is a simple demonstration of basic game AI concepts
-        """
-        # First priority: Try to capture a piece
+     
+# First priority: Try to capture a piece
         for start_x in range(8):
             for start_y in range(8):
                 piece = self.board.get_piece(start_x, start_y)
@@ -332,7 +326,7 @@ class ChessGame:
                                     self.move_piece(start_x, start_y, end_x, end_y)
                                     return
 
-        # Second priority: Make any valid move
+# Second priority: Make any valid move
         valid_moves = []
         for start_x in range(8):
             for start_y in range(8):
@@ -343,7 +337,7 @@ class ChessGame:
                             if piece.is_valid_move(self.board, start_x, start_y, end_x, end_y):
                                 valid_moves.append((start_x, start_y, end_x, end_y))
         
-        # Make a random move if any valid moves exist
+# Make a random move if any valid moves exist
         if valid_moves:
             start_x, start_y, end_x, end_y = random.choice(valid_moves)
             self.move_piece(start_x, start_y, end_x, end_y)
@@ -402,7 +396,7 @@ class ChessGame:
                                 self.selected_piece = clicked_piece
                                 self.selected_pos = (row, col)
 
-            screen.fill(DARK_BLUE)  # Fill with board border color
+            screen.fill(DARK_BLUE) 
             self.draw_board()
             self.draw_scoreboard()
             pygame.display.flip()
