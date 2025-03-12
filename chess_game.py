@@ -9,11 +9,11 @@ from datetime import datetime
 # Initialize Pygame
 pygame.init()
 
-# Constants
+# Window size settings
 WINDOW_SIZE = 800
 SQUARE_SIZE = WINDOW_SIZE // 8
 
-# Enhanced Color Scheme for the chess board
+# Colour of the board
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 DARK_WOOD = (120, 81, 45)    
@@ -26,7 +26,7 @@ FOREST_GREEN = (34, 139, 34)
 CRIMSON = (220, 20, 60)      
 MOVE_HIGHLIGHT = (124, 252, 0, 128)  
 
-# Set up the display
+# Display setup
 screen = pygame.display.set_mode((WINDOW_SIZE + 250, WINDOW_SIZE))
 pygame.display.set_caption('Chess Game')
 
@@ -56,7 +56,7 @@ class ChessGame:
         self.board_border = 10  # Border width for the chess board
         self.gradient_bg = create_gradient_surface(250, WINDOW_SIZE, 
                                                  (245, 245, 245), (220, 220, 220))
-#method to get the next game id
+       #method to get the next game id
     def get_next_game_id(self):
        
         try:
@@ -65,7 +65,7 @@ class ChessGame:
                 return max([score['game_id'] for score in scores], default=-1) + 1
         except FileNotFoundError:
             return 0
-# method to load the pieces from the assets folder
+       # method to load the pieces from the assets folder
     def load_pieces(self):
         piece_types = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king']
         colors = ['white', 'black']
@@ -99,7 +99,7 @@ class ChessGame:
         
         with open('scores.json', 'w') as f:
             json.dump(self.scores, f, indent=4)
-#method to add a new game result to the scores.json file
+#method to add a new game result to the scores.json file, to show the game, date,number of moves and the winner
     def add_game_result(self, winner, moves):
        
         game_record = {
@@ -114,7 +114,8 @@ class ChessGame:
         self.scores.append(game_record)
         self.save_scores()
         print(f"Game {self.game_id} saved!")
-#method to delete a specific game record from the scores.json file
+
+#method to delete a specific game record from the scores.json file  : Not currently working on the ui
     def delete_game_record(self, game_id):
         initial_length = len(self.scores)
         self.scores = [score for score in self.scores if score['game_id'] != game_id]
@@ -123,6 +124,7 @@ class ChessGame:
             print(f"Game {game_id} deleted!")
         else:
             print(f"Game {game_id} not found!")
+
 #method to update a specific game record in the scores.json file
     def update_game_record(self, game_id, winner=None):
       
@@ -139,7 +141,7 @@ class ChessGame:
                 return True
         print(f"Game {game_id} not found!")
         return False
-#method to calculate the piece value for scoring
+#Update each pieces score
     def calculate_piece_value(self, piece):
        
         values = {
@@ -337,7 +339,7 @@ class ChessGame:
                             if piece.is_valid_move(self.board, start_x, start_y, end_x, end_y):
                                 valid_moves.append((start_x, start_y, end_x, end_y))
         
-# Make a random move if any valid moves exist
+# Make a random move if any valid moves exist, for the cpu
         if valid_moves:
             start_x, start_y, end_x, end_y = random.choice(valid_moves)
             self.move_piece(start_x, start_y, end_x, end_y)
